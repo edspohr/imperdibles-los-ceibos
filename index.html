@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imperdible - Colegio Los Ceibos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        /* Nueva paleta de colores vibrante */
+        .header-bg {
+            background-color: #1E5631; /* Verde más vivo y oscuro */
+        }
+        .accent-bg {
+            background-color: #D90429; /* Rojo vibrante */
+        }
+        .accent-text {
+            color: #D90429;
+        }
+        .brand-green {
+            color: #1E5631;
+        }
+        .nav-link {
+            transition: all 0.3s;
+        }
+        .nav-link.active {
+            border-bottom: 3px solid #D90429;
+            color: #D90429;
+            font-weight: 600;
+        }
+        .nav-link:not(.active):hover {
+            color: #a70320;
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .btn-primary {
+            background-color: #1E5631;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #143a21;
+        }
+        .btn-secondary {
+            background-color: #D90429;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .btn-secondary:hover {
+            background-color: #a70320;
+        }
+        /* Estilos para el modal */
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+        .hero-section {
+            background: linear-gradient(rgba(30, 86, 49, 0.8), rgba(30, 86, 49, 0.8)), url('https://placehold.co/1200x400/e2e8f0/cccccc?text=Alumnos+Felices');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Contenedor principal de la aplicación -->
+    <div id="app" class="min-h-screen">
+
+        <!-- Encabezado -->
+        <header class="header-bg text-white shadow-md sticky top-0 z-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20">
+                    <div class="flex items-center space-x-4">
+                        <img src="https://placehold.co/100x100/FFFFFF/1E5631?text=LC" alt="Logo Colegio Los Ceibos" class="h-12 w-12 rounded-full border-2 border-white">
+                        <div>
+                            <h1 class="text-xl font-bold tracking-tight">Colegio Los Ceibos</h1>
+                            <p class="text-xs opacity-80">Uniformes Escolares</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2 text-sm">
+                        <span>Powered by</span>
+                        <span class="font-bold text-lg" style="color: #f0c419;">Imperdible ✨</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navegación de Vistas -->
+        <nav class="bg-white shadow-sm sticky top-20 z-40">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-center items-center space-x-8 h-14">
+                    <a href="#" id="nav-client" class="nav-link active flex items-center space-x-2 px-3 py-4 text-sm font-medium" onclick="switchView('client')">
+                        <i data-lucide="shopping-cart"></i>
+                        <span>Comprar Uniformes</span>
+                    </a>
+                    <a href="#" id="nav-admin" class="nav-link flex items-center space-x-2 px-3 py-4 text-sm font-medium" onclick="switchView('admin')">
+                        <i data-lucide="user-cog"></i>
+                        <span>Administrador</span>
+                    </a>
+                    <a href="#" id="nav-finder" class="nav-link flex items-center space-x-2 px-3 py-4 text-sm font-medium" onclick="switchView('finder')">
+                        <i data-lucide="search"></i>
+                        <span>Buscar Prenda</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Contenido dinámico -->
+        <main id="main-content">
+            <!-- La vista se carga aquí dinámicamente -->
+        </main>
+
+    </div>
+
+    <!-- Modal para datos del alumno -->
+    <div id="student-data-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
+        <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-md p-6 transform scale-95">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold brand-green">Datos del Alumno</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-800">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <p class="text-gray-600 mb-6">Ingresa la información para asociarla a las prendas seleccionadas.</p>
+            <form id="student-form">
+                <div class="space-y-4">
+                    <div>
+                        <label for="student-name" class="block text-sm font-medium text-gray-700">Nombre Completo del Alumno/a</label>
+                        <input type="text" id="student-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-700 focus:border-green-700 sm:text-sm" placeholder="Ej: Sofía González Pérez">
+                    </div>
+                    <div>
+                        <label for="student-grade" class="block text-sm font-medium text-gray-700">Curso</label>
+                        <input type="text" id="student-grade" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-700 focus:border-green-700 sm:text-sm" placeholder="Ej: 5º Básico A">
+                    </div>
+                    <div>
+                        <label for="contact-phone" class="block text-sm font-medium text-gray-700">Teléfono de Contacto</label>
+                        <input type="tel" id="contact-phone" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-700 focus:border-green-700 sm:text-sm" placeholder="Ej: +56 9 1234 5678">
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Cancelar</button>
+                    <button type="submit" class="btn-secondary px-4 py-2 rounded-md flex items-center space-x-2">
+                        <i data-lucide="check-circle"></i>
+                        <span>Confirmar Compra</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación -->
+    <div id="confirmation-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
+        <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-sm p-8 text-center transform scale-95">
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
+                <i data-lucide="party-popper" class="h-10 w-10 text-green-600"></i>
+            </div>
+            <h2 class="text-2xl font-bold brand-green mb-2">¡Pedido Realizado!</h2>
+            <p class="text-gray-600 mb-6">Tu compra ha sido procesada. El administrador asociará los QR a los datos de tu hijo/a.</p>
+            <button onclick="closeConfirmationModal()" class="btn-primary w-full py-2 rounded-md">Entendido</button>
+        </div>
+    </div>
+
+
+    <script>
+        // --- Estado de la Aplicación ---
+        const state = {
+            currentView: 'client',
+            cart: [],
+            products: [
+                { id: 1, name: 'Pantalón Gris', price: 18990, img: 'https://placehold.co/400x400/E2E8F0/1E5631?text=Pantal%C3%B3n', options: { type: 'pants' } },
+                { id: 2, name: 'Polerón Verde', price: 22500, img: 'https://placehold.co/400x400/E2E8F0/1E5631?text=Poler%C3%B3n', options: {} },
+                { id: 3, name: 'Blazer Rojo', price: 29990, img: 'https://placehold.co/400x400/E2E8F0/1E5631?text=Blazer', options: {} },
+                { id: 4, name: 'Polera Piqué Blanca', price: 12000, img: 'https://placehold.co/400x400/E2E8F0/1E5631?text=Polera', options: {} },
+                { id: 5, name: 'Calza Deportiva', price: 14990, img: 'https://placehold.co/400x400/E2E8F0/1E5631?text=Calza', options: {} },
+                { id: 6, name: 'Short Deportivo', price: 11990, img: 'https://placehold.co/400x400/E2E8F0/1E5631?text=Short', options: {} },
+                { id: 7, name: 'Polera Deportiva', price: 13500, img: 'https://placehold.co/400x400/E2E8F0/1E5631?text=Polera+Dep.', options: {} },
+                { id: 8, name: 'Polar Institucional', price: 25990, img: 'https://placehold.co/400x400/E2E8F0/1E5631?text=Polar', options: {} },
+                { id: 9, name: 'Polera Roja', price: 9990, img: 'https://placehold.co/400x400/E2E8F0/1E5631?text=Polera+Roja', options: {} }
+            ],
+            orders: [], // Simula las órdenes para el admin
+            foundItem: null // Simula el item encontrado
+        };
+
+        // --- Vistas (Templates HTML) ---
+        const views = {
+            client: `
+                <!-- Hero Section -->
+                <section class="hero-section text-white">
+                    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+                        <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight">Uniformes que siempre vuelven a casa.</h2>
+                        <p class="mt-4 max-w-2xl mx-auto text-lg opacity-90">
+                            Cada prenda Imperdible tiene un QR único. Si se extravía, quien la encuentre puede escanearlo y contactarte al instante.
+                            ¡Más tranquilidad para ti, menos prendas perdidas para ellos!
+                        </p>
+                        <a href="#catalog" class="mt-8 inline-block btn-secondary font-bold py-3 px-8 rounded-full text-lg transition-transform transform hover:scale-105">
+                            Ver Catálogo
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Catálogo de Productos -->
+                <div id="catalog" class="container mx-auto p-4 sm:p-6 lg:p-8">
+                     <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                        <!-- Columna de productos -->
+                        <div class="lg:col-span-3">
+                            <h2 class="text-3xl font-bold mb-6 brand-green">Catálogo de Uniformes</h2>
+                            <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                                <!-- Los productos se insertan aquí -->
+                            </div>
+                        </div>
+                        <!-- Columna del carrito -->
+                        <div class="lg:col-span-1">
+                            <div class="bg-white p-6 rounded-lg shadow-md sticky top-40">
+                                <div class="flex items-center space-x-3 mb-4">
+                                    <i data-lucide="shopping-cart" class="accent-text"></i>
+                                    <h3 class="text-2xl font-bold accent-text">Tu Carrito</h3>
+                                </div>
+                                <div id="cart-items" class="space-y-4 mb-4 max-h-96 overflow-y-auto pr-2">
+                                    <!-- Items del carrito aquí -->
+                                </div>
+                                <div id="cart-summary">
+                                    <!-- Resumen del carrito aquí -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            admin: `
+                <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+                    <h2 class="text-3xl font-bold mb-6 brand-green">Panel de Administración de Pedidos</h2>
+                    <div id="order-list" class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-4 border-b pb-2">Pedidos Pendientes de Asignación QR</h3>
+                        <div id="pending-orders-container" class="space-y-6">
+                           <!-- Las órdenes se insertan aquí -->
+                        </div>
+                    </div>
+                </div>
+            `,
+            finder: `
+                <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+                    <div class="max-w-2xl mx-auto text-center">
+                        <h2 class="text-3xl font-bold mb-4 brand-green">Buscador de Prenda Extraviada</h2>
+                        <p class="text-gray-600 mb-8">Si encontraste una prenda con nuestro QR, ingrésalo aquí para ver los datos de contacto.</p>
+                        <div class="bg-white p-8 rounded-lg shadow-md">
+                            <div class="flex flex-col sm:flex-row items-center gap-4">
+                                <input id="qr-code-input" type="text" placeholder="Ingresa el código QR (ej: IMP-12345)" class="flex-grow w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent">
+                                <button onclick="searchQrCode()" class="btn-primary w-full sm:w-auto px-6 py-3 rounded-md font-semibold flex items-center justify-center space-x-2">
+                                    <i data-lucide="search"></i>
+                                    <span>Buscar</span>
+                                </button>
+                            </div>
+                            <div id="finder-result" class="mt-8 text-left">
+                               <!-- El resultado de la búsqueda se inserta aquí -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `
+        };
+
+        // --- Lógica de Renderizado ---
+
+        function renderClientView() {
+            document.getElementById('main-content').innerHTML = views.client;
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = '';
+            state.products.forEach(product => {
+                const productCard = `
+                    <div class="card bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
+                        <img src="${product.img}" alt="${product.name}" class="w-full h-40 object-cover">
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h4 class="text-md font-semibold flex-grow">${product.name}</h4>
+                            <p class="text-lg font-bold brand-green my-2">$${product.price.toLocaleString('es-CL')}</p>
+                            <div class="space-y-2 mt-2">
+                                <div>
+                                    <select id="size-${product.id}" class="w-full text-sm pl-2 pr-8 py-1 border-gray-300 focus:outline-none focus:ring-green-700 focus:border-green-700 rounded-md">
+                                        <option>Talla S</option>
+                                        <option>Talla M</option>
+                                        <option>Talla L</option>
+                                        <option>Talla XL</option>
+                                    </select>
+                                </div>
+                                ${product.options.type === 'pants' ? `
+                                <div>
+                                     <select id="length-${product.id}" class="w-full text-sm pl-2 pr-8 py-1 border-gray-300 focus:outline-none focus:ring-green-700 focus:border-green-700 rounded-md">
+                                        <option>Largo Corto</option>
+                                        <option>Largo Regular</option>
+                                    </select>
+                                </div>
+                                ` : ''}
+                            </div>
+                            <button onclick="addToCart(${product.id})" class="btn-primary w-full mt-3 py-1.5 rounded-md font-semibold text-sm flex items-center justify-center space-x-2">
+                                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                                <span>Agregar</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                productList.innerHTML += productCard;
+            });
+            renderCart();
+            lucide.createIcons();
+        }
+
+        function renderCart() {
+            const cartItems = document.getElementById('cart-items');
+            const cartSummary = document.getElementById('cart-summary');
+            
+            if (state.cart.length === 0) {
+                cartItems.innerHTML = `<p class="text-gray-500 text-center py-8">Tu carrito está vacío.</p>`;
+                cartSummary.innerHTML = '';
+                return;
+            }
+
+            cartItems.innerHTML = '';
+            let total = 0;
+            state.cart.forEach((item, index) => {
+                total += item.price;
+                cartItems.innerHTML += `
+                    <div class="flex justify-between items-start p-2 bg-gray-50 rounded-md">
+                        <div>
+                            <p class="font-semibold text-sm">${item.name}</p>
+                            <p class="text-xs text-gray-600">${item.size}${item.length ? `, ${item.length}` : ''}</p>
+                            <p class="text-sm font-bold brand-green">$${item.price.toLocaleString('es-CL')}</p>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                `;
+            });
+
+            cartSummary.innerHTML = `
+                <div class="border-t pt-4">
+                    <div class="flex justify-between items-center font-bold text-lg">
+                        <span>Total:</span>
+                        <span class="brand-green">$${total.toLocaleString('es-CL')}</span>
+                    </div>
+                    <button onclick="checkout()" class="btn-secondary w-full mt-4 py-2.5 rounded-md font-bold flex items-center justify-center space-x-2">
+                        <i data-lucide="shield-check"></i>
+                        <span>Ir a Pagar</span>
+                    </button>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function renderAdminView() {
+            document.getElementById('main-content').innerHTML = views.admin;
+            const container = document.getElementById('pending-orders-container');
+            if (state.orders.length === 0) {
+                container.innerHTML = `<p class="text-gray-500 text-center py-8">No hay pedidos pendientes.</p>`;
+                return;
+            }
+            container.innerHTML = '';
+            state.orders.forEach(order => {
+                const orderHtml = `
+                    <div class="border rounded-lg p-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-bold">Pedido #${order.id}</p>
+                                <p class="text-sm text-gray-600">Alumno: <span class="font-medium">${order.student.name}</span></p>
+                                <p class="text-sm text-gray-600">Curso: <span class="font-medium">${order.student.grade}</span></p>
+                                <p class="text-sm text-gray-600">Contacto: <span class="font-medium">${order.student.phone}</span></p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-semibold text-lg brand-green">$${order.total.toLocaleString('es-CL')}</p>
+                                <span class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 font-medium">Pendiente</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 border-t pt-4">
+                            <h4 class="font-semibold mb-2">Prendas a asociar:</h4>
+                            <ul class="space-y-2">
+                                ${order.items.map(item => `
+                                    <li class="flex items-center justify-between bg-gray-50 p-2 rounded-md">
+                                        <div>
+                                            <p>${item.name} (${item.size}${item.length ? `, ${item.length}` : ''})</p>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <input type="text" placeholder="Escanear QR" class="w-32 px-2 py-1 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-green-700">
+                                            <i data-lucide="qr-code" class="text-gray-400"></i>
+                                        </div>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                            <div class="text-right mt-4">
+                                <button onclick="assignQRs(${order.id})" class="btn-primary px-4 py-2 rounded-md text-sm font-semibold flex items-center space-x-2 ml-auto">
+                                    <i data-lucide="link"></i>
+                                    <span>Asignar QR y Completar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += orderHtml;
+            });
+            lucide.createIcons();
+        }
+
+        function renderFinderView() {
+            document.getElementById('main-content').innerHTML = views.finder;
+            lucide.createIcons();
+        }
+
+        // --- Lógica de Interacción ---
+
+        function addToCart(productId) {
+            const product = state.products.find(p => p.id === productId);
+            const size = document.getElementById(`size-${productId}`).value;
+            let length = null;
+            if (product.options.type === 'pants') {
+                length = document.getElementById(`length-${productId}`).value;
+            }
+            state.cart.push({ ...product, size, length, cartId: Date.now() });
+            renderCart();
+        }
+
+        function removeFromCart(index) {
+            state.cart.splice(index, 1);
+            renderCart();
+        }
+
+        function checkout() {
+            if (state.cart.length === 0) return;
+            document.getElementById('student-data-modal').classList.remove('hidden');
+            setTimeout(() => {
+                document.querySelector('#student-data-modal').classList.add('opacity-100');
+                document.querySelector('#student-data-modal .modal-content').classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('student-data-modal');
+            modal.classList.remove('opacity-100');
+            modal.querySelector('.modal-content').classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+        
+        function closeConfirmationModal() {
+            const modal = document.getElementById('confirmation-modal');
+            modal.classList.remove('opacity-100');
+            modal.querySelector('.modal-content').classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        document.getElementById('student-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newOrder = {
+                id: Math.floor(Math.random() * 9000) + 1000,
+                student: {
+                    name: document.getElementById('student-name').value,
+                    grade: document.getElementById('student-grade').value,
+                    phone: document.getElementById('contact-phone').value
+                },
+                items: [...state.cart],
+                total: state.cart.reduce((sum, item) => sum + item.price, 0)
+            };
+            state.orders.push(newOrder);
+            state.cart = [];
+            
+            state.foundItem = {
+                qrCode: 'IMP-12345',
+                student: newOrder.student
+            };
+            
+            closeModal();
+            renderCart();
+
+            const confirmationModal = document.getElementById('confirmation-modal');
+            confirmationModal.classList.remove('hidden');
+            setTimeout(() => {
+                confirmationModal.classList.add('opacity-100');
+                confirmationModal.querySelector('.modal-content').classList.remove('scale-95');
+            }, 10);
+        });
+        
+        function assignQRs(orderId) {
+            const orderIndex = state.orders.findIndex(o => o.id === orderId);
+            if (orderIndex > -1) {
+                state.orders.splice(orderIndex, 1);
+            }
+            renderAdminView();
+        }
+
+        function searchQrCode() {
+            const input = document.getElementById('qr-code-input').value;
+            const resultDiv = document.getElementById('finder-result');
+            
+            if (state.foundItem && input.toLowerCase() === state.foundItem.qrCode.toLowerCase()) {
+                resultDiv.innerHTML = `
+                    <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg">
+                        <div class="flex items-center space-x-4">
+                            <div class="flex-shrink-0">
+                                <i data-lucide="check-circle-2" class="h-10 w-10 text-green-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold brand-green">¡Prenda Encontrada!</h4>
+                                <p class="text-gray-700 mt-2">Esta prenda pertenece a:</p>
+                                <p class="font-semibold text-lg mt-1">${state.foundItem.student.name}</p>
+                                <p class="text-gray-600"><strong>Curso:</strong> ${state.foundItem.student.grade}</p>
+                                <p class="text-gray-600"><strong>Teléfono de Contacto:</strong> ${state.foundItem.student.phone}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                 resultDiv.innerHTML = `
+                    <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-r-lg">
+                        <div class="flex items-center space-x-4">
+                            <div class="flex-shrink-0">
+                                <i data-lucide="x-circle" class="h-10 w-10 text-red-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold accent-text">Código no encontrado</h4>
+                                <p class="text-gray-700 mt-2">El código QR ingresado no está en nuestro sistema o es incorrecto. Por favor, verifica e intenta de nuevo.</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        // --- Navegación ---
+        function switchView(view) {
+            state.currentView = view;
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.getElementById(`nav-${view}`).classList.add('active');
+
+            if (view === 'client') renderClientView();
+            else if (view === 'admin') renderAdminView();
+            else if (view === 'finder') renderFinderView();
+        }
+
+        // --- Inicialización ---
+        window.onload = () => {
+            renderClientView();
+            lucide.createIcons();
+        };
+
+    </script>
+</body>
+</html>
