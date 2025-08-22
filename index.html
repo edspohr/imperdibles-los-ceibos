@@ -67,7 +67,7 @@
             transition: transform 0.3s ease;
         }
         .hero-section {
-            background: linear-gradient(rgba(30, 86, 49, 0.8), rgba(30, 86, 49, 0.8)), url('https://placehold.co/1200x400/e2e8f0/cccccc?text=Alumnos+Felices');
+            background: linear-gradient(rgba(30, 86, 49, 0.85), rgba(30, 86, 49, 0.85)), url('https://placehold.co/1200x400/e2e8f0/cccccc?text=Alumnos+Felices');
             background-size: cover;
             background-position: center;
         }
@@ -199,14 +199,35 @@
                 <!-- Hero Section -->
                 <section class="hero-section text-white">
                     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-                        <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight">Uniformes que siempre vuelven a casa.</h2>
-                        <p class="mt-4 max-w-2xl mx-auto text-lg opacity-90">
-                            Cada prenda Imperdible tiene un QR único. Si se extravía, quien la encuentre puede escanearlo y contactarte al instante.
-                            ¡Más tranquilidad para ti, menos prendas perdidas para ellos!
+                        <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight">Llegan a tu casa y siempre vuelven.</h2>
+                        <p class="mt-4 max-w-3xl mx-auto text-lg opacity-90">
+                            Uniformes con QR integrado para que nunca más se pierdan. Cómodos, duraderos y con delivery directo a tu puerta.
                         </p>
                         <a href="#catalog" class="mt-8 inline-block btn-secondary font-bold py-3 px-8 rounded-full text-lg transition-transform transform hover:scale-105">
                             Ver Catálogo
                         </a>
+                    </div>
+                </section>
+
+                <!-- Features Section -->
+                <section class="bg-white">
+                    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                            <div class="text-center md:text-left">
+                                <div class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                                    <i data-lucide="truck" class="h-6 w-6 accent-text"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold brand-green">Delivery directo a tu puerta</h3>
+                                <p class="mt-2 text-gray-600">Olvídate de las filas. Recibe todos los uniformes en la comodidad de tu hogar. Rápido, seguro y sin complicaciones para que te enfoques en lo que más importa.</p>
+                            </div>
+                            <div class="text-center md:text-left">
+                                <div class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                                    <i data-lucide="refresh-cw" class="h-6 w-6 accent-text"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold brand-green">Datos 100% actualizables</h3>
+                                <p class="mt-2 text-gray-600">¿La prenda fue heredada a un hermano menor? No hay problema. Desde tu cuenta podrás actualizar el nombre y curso asociado al QR en cualquier momento. ¡Una prenda, múltiples vidas!</p>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -215,7 +236,7 @@
                      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                         <!-- Columna de productos -->
                         <div class="lg:col-span-3">
-                            <h2 class="text-3xl font-bold mb-6 brand-green">Catálogo de Uniformes</h2>
+                            <h2 class="text-3xl font-bold mb-6 brand-green border-b-4 border-red-200 pb-2">Catálogo de Uniformes</h2>
                             <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                                 <!-- Los productos se insertan aquí -->
                             </div>
